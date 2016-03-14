@@ -9,7 +9,8 @@
 
     <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
     <!--<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">-->
-
+    
+    <!-- Inlined all styles from css/style.css here -->
     <style>
       html {
       font-size: 100%;
@@ -62,6 +63,7 @@
       }
     </style>
 
+    <!-- Used media query to end render blocking for print styles. -->
     <link href="css/print.css" rel="stylesheet" media="print">
     
     <script>
@@ -72,13 +74,14 @@
       ga('create', 'UA-XXXX-Y');
       ga('send', 'pageview');
     </script>
-    <!-- Added async to google-analytics to load later -->
+    <!-- Added async to google-analytics and perfmatters to load later -->
     <script async src="http://www.google-analytics.com/analytics.js"></script>
     <script async src="js/perfmatters.js"></script>
   </head>
 
   <body>
     <header>
+      <!-- Added width value and created new optimized/compressed image. -->
       <a href="/"><img style="width: 70px;" src="img/profilepic_optimized.jpg"></a>
       <p>Cameron Pittman<br><span>Course Developer</span></p>
     </header>
@@ -109,7 +112,8 @@
           </li>
 
           <li>
-            <img style="width: 100px;" src="views/images/pizzeria_small.jpg">
+            <!-- Created new optimized/compressed image. -->
+            <img src="views/images/pizzeria_small.jpg">
             <a href="views/pizza.html">Cam's Pizzeria</a>
             <p>Who wants a performant pizza?</p>
           </li>
