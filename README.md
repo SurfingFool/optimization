@@ -80,10 +80,10 @@ Finally, I worked on decreasing the time it took to resize pizzas when using the
 
 1. Removed all determineDx function and all associations because knowing the dimensions was not necessary to change the sizes.
 
-2. Changed the changePizzaSizes function by redifining "newWidth".
+2. Changed the changePizzaSizes function by redifining "newWidth" and changed to simple percent value.
 
 3. Added pizzaSizes variable and assigned value to prevent repetition.
-```
+```javascript
 function changePizzaSizes(size) {
     switch(size) {
       case "1":
