@@ -1,11 +1,11 @@
 ## Website Performance Optimization portfolio project
 
-     The goal of this project was to optimize the critical rendering path and make index.html page render as quickly as possible and get JavaScript animation on pizza.html to run at a smooth 60 fps.
+The goal of this project was to optimize the critical rendering path and make index.html page render as quickly as possible and get JavaScript animation on pizza.html to run at a smooth 60 fps.
 
 ### Getting started
 
 #### Improving PageSpeed score
-     In order to see what I was working with, I needed to measure the page load speed score using Google's PageSpeed Insights.  After downloading the original repository on my local drive, I pushed the project files and folders to my GitHub site and set it up to run through a server with its own url which I could then enter into PageSpeed. 
+In order to see what I was working with, I needed to measure the page load speed score using Google's PageSpeed Insights.  After downloading the original repository on my local drive, I pushed the project files and folders to my GitHub site and set it up to run through a server with its own url which I could then enter into PageSpeed. 
 
 ##### Before score = 28/100
 
@@ -21,8 +21,10 @@
 
 ##### After scores: Mobile = 95; Desktop = 96
 
+
 #### Improving Frames per Second
-     Achieving 60 fps for the background pizza animation involved measuring the current speed using the recorded timeline in Chrome Dev Tools.  Most of the issues were inside the updatePositions() function:
+
+Achieving 60 fps for the background pizza animation involved measuring the current speed using the recorded timeline in Chrome Dev Tools.  Most of the issues were inside the updatePositions() function:
 
 ```
 function updatePositions()
@@ -71,6 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
   updatePositions();
 });
 ```
+
+#### Improving time to resize pizzas
 
 Finally, I worked on decreasing the time it took to resize pizzas when using the slider control inside resizePizzas function.
 
