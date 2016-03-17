@@ -435,7 +435,7 @@ var resizePizzas = function(size) {
         console.log("bug in sizeSwitcher");
     }
     // Added variable and assigned value to prevent repetition.
-    var pizzaSizes = document.querySelectorAll(".randomPizzaContainer");
+    var pizzaSizes = document.getElementsByClassName("randomPizzaContainer");
     
     for (var i = 0; i < pizzaSizes.length; i++) {
       pizzaSizes[i].style.width = newWidth + "%";
@@ -453,9 +453,11 @@ var resizePizzas = function(size) {
 
 window.performance.mark("mark_start_generating"); // collect timing data
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
+// This for-loop actually creates and appends all of the pizzas when the page loads.
+// Moved var pizzasDiv outside the loop.
+var pizzasDiv = document.getElementById("randomPizzas");
+
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -491,9 +493,12 @@ function updatePositions() {
   // Moved math calculation out of for Loop.
   var top = (document.body.scrollTop / 1250);
   // Cached the value of the items array, so the length of array is calculated just once, and
-  // Reduced number of elements in array from 200 to 32.
+  // Reduced number of elements in array from 200 to 32 and moved math calculation above for loop.
+  // Moved phase variable outside of loop to prevent it from being created every time loop executes.
+  var phase;
+
   for (var i = 32; i--; ) {
-    var phase = Math.sin(top + (i % 5));
+    phase = Math.sin(top + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
   }
 
@@ -518,15 +523,17 @@ window.addEventListener('scroll', function() {
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-
+  var elem;
+  // Moved var elem outside the loop to prevent from being created every time loop executes.
   for (var i = 32; i--;) {
-    var elem = document.createElement('img');
+    elem = document.createElement('img');
     elem.className = 'mover';
-    //Optimized pizza image - reduced size to 100px X 100px. Removed height & width styles; width in CSS.
+    // Optimized pizza image - reduced size to 100px X 100px. Removed height & width styles; width in CSS.
     elem.src = "images/pizza_small.png";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.querySelector("#movingPizzas1").appendChild(elem);
+    // Changed querySelector to getElementById - faster.
+    document.getElementById("movingPizzas1").appendChild(elem);
   }
   updatePositions();
 });
