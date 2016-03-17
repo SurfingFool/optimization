@@ -1,65 +1,111 @@
 ## Website Performance Optimization portfolio project
 
-Your challenge, if you wish to accept it (and we sure hope you will), is to optimize this online portfolio for speed! In particular, optimize the critical rendering path and make this page render as quickly as possible by applying the techniques you've picked up in the [Critical Rendering Path course](https://www.udacity.com/course/ud884).
-
-To get started, check out the repository, inspect the code,
+The goal of this project was to optimize the critical rendering path and make index.html page render as quickly as possible and get JavaScript animation on pizza.html to run at a smooth 60 fps.
 
 ### Getting started
 
-Some useful tips to help you get started:
+#### Improving PageSpeed score
+In order to see what I was working with, I needed to measure the page load speed score using Google's PageSpeed Insights.  After downloading the original repository on my local drive, I pushed the project files and folders to my GitHub site and set it up to run through a server with its own url which I could then enter into PageSpeed. 
 
-1. Check out the repository
-1. To inspect the site on your phone, you can run a local server
+##### Before score = 28/100
 
-  ```bash
-  $> cd /path/to/your-project-folder
-  $> python -m SimpleHTTPServer 8080
-  ```
+**Images**
+1. First, I optimized the images by reducing the size of the pizzeria.jpg and profilepic.jpg images and compressed them further using Adobe Photoshop.
 
-1. Open a browser and visit localhost:8080
-1. Download and install [ngrok](https://ngrok.com/) to make your local server accessible remotely.
+**index.html**
+2. Commented out/Removed web font.
 
-  ``` bash
-  $> cd /path/to/your-project-folder
-  $> ngrok 8080
-  ```
+3. I eliminated render-blocking CSS "above the fold" by inlining all styles in the head section and added a media query for print.css so it would not load unless printed.
 
-1. Copy the public URL ngrok gives you and try running it through PageSpeed Insights! [More on integrating ngrok, Grunt and PageSpeed.](http://www.jamescryer.com/2014/06/12/grunt-pagespeed-and-ngrok-locally-testing/)
+4. Eliminated render-blocking JS by adding "async" directly after "script" in the script tags in order to asynchronously load the JS files.
 
-Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
+##### After scores: Mobile = 95; Desktop = 96
 
-### Optimization Tips and Tricks
-* [Optimizing Performance](https://developers.google.com/web/fundamentals/performance/ "web performance")
-* [Analyzing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/analyzing-crp.html "analyzing crp")
-* [Optimizing the Critical Rendering Path](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/optimizing-critical-rendering-path.html "optimize the crp!")
-* [Avoiding Rendering Blocking CSS](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/render-blocking-css.html "render blocking css")
-* [Optimizing JavaScript](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/adding-interactivity-with-javascript.html "javascript")
-* [Measuring with Navigation Timing](https://developers.google.com/web/fundamentals/performance/critical-rendering-path/measure-crp.html "nav timing api"). We didn't cover the Navigation Timing API in the first two lessons but it's an incredibly useful tool for automated page profiling. I highly recommend reading.
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/eliminate-downloads.html">The fewer the downloads, the better</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/optimize-encoding-and-transfer.html">Reduce the size of text</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/image-optimization.html">Optimize images</a>
-* <a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching.html">HTTP caching</a>
 
-### Customization with Bootstrap
-The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstrap</a> framework. All custom styles are in `dist/css/portfolio.css` in the portfolio repo.
+#### Improving Frames per Second
 
-* <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
-* <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
+Achieving 60 fps for the background pizza animation involved measuring the current speed using the recorded timeline in Chrome Dev Tools.  Most of the issues were inside the updatePositions() function:
 
-### Sample Portfolios
+```
+function updatePositions()
+```
+1. First, I changed:
+	`var items = document.querySelectorAll(.mover);`
+	to
+	`var items = document.getElementsByClassName('mover');`
 
-Feeling uninspired by the portfolio? Here's a list of cool portfolios I found after a few minutes of Googling.
+2. The for loop was causing a math calculation for every iteration, so I moved the math calculation outside the loop. I also attempted to increase speed by caching the value of the items array and reducing the number of elements from 200 to 32.
+```javascript
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
 
-* <a href="http://www.reddit.com/r/webdev/comments/280qkr/would_anybody_like_to_post_their_portfolio_site/">A great discussion about portfolios on reddit</a>
-* <a href="http://ianlunn.co.uk/">http://ianlunn.co.uk/</a>
-* <a href="http://www.adhamdannaway.com/portfolio">http://www.adhamdannaway.com/portfolio</a>
-* <a href="http://www.timboelaars.nl/">http://www.timboelaars.nl/</a>
-* <a href="http://futoryan.prosite.com/">http://futoryan.prosite.com/</a>
-* <a href="http://playonpixels.prosite.com/21591/projects">http://playonpixels.prosite.com/21591/projects</a>
-* <a href="http://colintrenter.prosite.com/">http://colintrenter.prosite.com/</a>
-* <a href="http://calebmorris.prosite.com/">http://calebmorris.prosite.com/</a>
-* <a href="http://www.cullywright.com/">http://www.cullywright.com/</a>
-* <a href="http://yourjustlucky.com/">http://yourjustlucky.com/</a>
-* <a href="http://nicoledominguez.com/portfolio/">http://nicoledominguez.com/portfolio/</a>
-* <a href="http://www.roxannecook.com/">http://www.roxannecook.com/</a>
-* <a href="http://www.84colors.com/portfolio.html">http://www.84colors.com/portfolio.html</a>
+  var items = document.getElementsByClassName('mover');
+  // Moved math calculation out of for Loop.
+  var top = (document.body.scrollTop / 1250);
+  // Cached the value of the items array, so the length of array is calculated just once, and
+  // Reduced number of elements in array from 200 to 32.
+  for (var i = 32; i--; ) {
+    var phase = Math.sin(top + (i % 5));
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
+```
+
+I then worked on the document.addEventListener function():
+```
+document.addEventListener('DOMContentLoaded', function() {
+```
+1. I removed both the height and width styles here, and in CSS file:
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  var cols = 8;
+  var s = 256;
+
+  for (var i = 32; i--;) {
+    var elem = document.createElement('img');
+    elem.className = 'mover';
+    //Optimized pizza image - reduced size to 100px X 100px. Removed height & width styles; width in CSS.
+    elem.src = "images/pizza_small.png";
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
+    document.querySelector("#movingPizzas1").appendChild(elem);
+  }
+  updatePositions();
+});
+```
+
+#### Improving time to resize pizzas
+
+Finally, I worked on decreasing the time it took to resize pizzas when using the slider control inside resizePizzas function.
+
+1. Removed all determineDx function and all associations because knowing the dimensions was not necessary to change the sizes.
+
+2. Changed the changePizzaSizes function by redifining "newWidth" and changed to simple percent value.
+
+3. Added pizzaSizes variable and assigned value to prevent repetition.
+```javascript
+function changePizzaSizes(size) {
+    switch(size) {
+      case "1":
+        newWidth = 25;
+        break;
+      case "2":
+        newWidth = 33.3;
+        break;
+      case "3":
+        newWidth = 50;
+        break;
+      default:
+        console.log("bug in sizeSwitcher");
+    }
+    // Added variable and assigned value to prevent repetition.
+    var pizzaSizes = document.querySelectorAll(".randomPizzaContainer");
+    
+    for (var i = 0; i < pizzaSizes.length; i++) {
+      pizzaSizes[i].style.width = newWidth + "%";
+    }
+  }
+
+  changePizzaSizes(size);
+```
+ 
